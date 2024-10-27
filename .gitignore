@@ -1,0 +1,40 @@
+# Python
+*.py[cod]
+__pycache__/
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Django
+*.log
+*.pot
+*.pyc
+*.coverage
+*.egg-info/
+dist/
+build/
+media/
+staticfiles/
+
+# Virtual Environment
+env/
+.env
+.env.*
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Other
+*.DS_Store
+*.env
+*.local
+
+# Local configuration files
+local_settings.py
