@@ -35,6 +35,9 @@ env/
 *.DS_Store
 *.env
 *.local
+uploads/
 
 # Local configuration files
 local_settings.py
+
+
