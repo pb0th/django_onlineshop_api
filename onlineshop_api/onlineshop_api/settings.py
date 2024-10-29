@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'custom_auth',
     'users',
     'categories',
-    "products"
+    'products'
     
 ]
 
@@ -156,6 +156,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'shared.custom_pagination.CustomPagination', 
+    'PAGE_SIZE': 20,
 }
 
 SIMPLE_JWT = {
@@ -175,5 +177,5 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-MEDIA_URL = '/uploads/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '')

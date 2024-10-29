@@ -41,6 +41,15 @@ class ProductSerializerTest(BaseProductTestCase):
         # Validate the image path and file existence
         self.assertTrue(os.path.exists(product.image.path))
         self.assertEqual(actual_path, expected_path)
+
+    def test_create_product_default_is_active_true(self):
+        data = self.product_data.copy()
+        data.pop("is_active")
+        serializer = ProductSerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
+        product = serializer.save()
+        self.assertTrue(product.is_active)
     
     def test_serializer_invalid_data(self):
         invalid_product_data = self.product_data.copy()
@@ -104,3 +113,5 @@ class ProductSerializerTest(BaseProductTestCase):
         # Validate the image path and file existence
         self.assertTrue(os.path.exists(product.image.path))
         self.assertEqual(actual_path, expected_path)
+
+    
