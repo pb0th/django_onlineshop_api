@@ -1,22 +1,18 @@
-from rest_framework.test import APITestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from categories.models import Category
-from rest_framework_simplejwt.tokens import RefreshToken
-
+from shared.base_api_test import BaseAPITest
 User = get_user_model()
 
 
 
 # Endpoint/Integration test cases
 
-class CategoryAPITests(APITestCase):
+class CategoryAPITests(BaseAPITest):
+   
     def setUp(self):
-        self.user = User.objects.create(email="test@gmail.com", password="TestingPassword69", phone_number="012123123", date_of_birth="2000-01-01")
-        refresh = RefreshToken.for_user(self.user)
-        self.access_token = str(refresh.access_token)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.access_token)
+        super().setUp()
         self.category = Category.objects.create(name='Outer Wears', description='Jackets, Suits, etc')
         self.category_data = {
             'name': 'Test Name 2',
@@ -76,7 +72,7 @@ class CategoryAPITests(APITestCase):
         }
         url = reverse("category_detail", args=[99])
         response = self.client.patch(url, data=update_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
     
