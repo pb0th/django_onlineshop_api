@@ -2,7 +2,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import ProductSerializer, StockSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
-from .models import Product, Stock
+from .models import Product
 from rest_framework import status
 from rest_framework.response import Response
 

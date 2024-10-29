@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'custom_auth',
     'users',
     'categories',
-    'products'
+    'products',
+    'stocks'
     
 ]
 

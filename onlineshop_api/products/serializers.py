@@ -1,26 +1,9 @@
 from rest_framework import serializers
-from .models import Product, Stock, StockMovement
+from .models import Product
 from categories.models import Category
 from categories.serializers import CategorySerializer
+from stocks.serializers import StockSerializer
 
-
-
-class StockMovementSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StockMovement
-        fields = ['id', 'quantity', 'movement_type', 'description']
-
-
-
-
-class StockSerializer(serializers.ModelSerializer):
-    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
-    class Meta:
-        model = Stock
-        fields = ['id', 'name', 'quantity', 'stock_date', 'product']
-
-
-        
 
 class ProductSerializer(serializers.ModelSerializer):
     categories = serializers.PrimaryKeyRelatedField(
