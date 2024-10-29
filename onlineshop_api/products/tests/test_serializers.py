@@ -23,6 +23,9 @@ class ProductSerializerTest(BaseProductTestCase):
     def test_serializer_create_with_valid_data(self):
         serializer = ProductSerializer(data=self.product_data)
         is_valid = serializer.is_valid()
+        if not is_valid:
+            print("====== serializer errors ======")
+            print(serializer.errors)
         self.assertTrue(is_valid)
         product = serializer.save()
 

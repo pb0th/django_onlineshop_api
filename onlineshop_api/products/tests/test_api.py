@@ -36,6 +36,7 @@ class ProductAPITest(BaseAPITest):
             'image': self.test_image,
             'is_active': True,
             'categories': [self.category_1.id, self.category_2.id],
+            'quantity':23
         }
         self.product = Product.objects.create(
             name=self.product_data['name'],
@@ -70,7 +71,7 @@ class ProductAPITest(BaseAPITest):
 
         
         current_product_count = Product.objects.count()
-        response = self.client.post(self.list_url, data=data)
+        response = self.client.post(self.list_url, data=data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(current_product_count + 1, Product.objects.count() )
         self.assertTrue(response.data['is_active'])

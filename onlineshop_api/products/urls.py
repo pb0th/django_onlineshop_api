@@ -6,6 +6,7 @@ from django.urls import path, include
 router = DefaultRouter()
 router.register(r'', ProductViewSet, basename='product')
 
+
 # Include the router's URLs in the urlpatterns list
 urlpatterns = [
     path('', include(router.urls)),

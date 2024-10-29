@@ -34,6 +34,9 @@ class BaseProductTestCase(TestCase):
             'image': self.test_image,
             'is_active': True,
             'categories': [self.category_1.id, self.category_2.id],
+            'stock':{
+                'quantity': 32
+            }
         }
 
     def tearDown(self):
