@@ -136,6 +136,78 @@ class ProductAPITest(BaseAPITest):
         product = Product.objects.get(id=self.product.id)
         self.assertFalse(product.is_active)
 
+    def test_api_get_products_with_name_filter(self):
+        response = self.client.get(self.list_url, {'name': 'Test'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        products = response.data['results']
+        expected_products = [p for p in [self.product] if 'Test' in p.name]
+        
+        self.assertEqual(len(products), len(expected_products))
+        self.assertEqual(response.data['count'], len(expected_products))
+    
+    def test_api_get_products_with_retail_price_filter(self):
+        response = self.client.get(self.list_url, {'retail_price_gte': 150})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        products = response.data['results']
+        expected_products = [p for p in Product.objects.all() if p.retail_price >= 150]
+        
+        self.assertEqual(len(products), len(expected_products))
+        self.assertEqual(response.data['count'], len(expected_products))
+
+    def test_api_get_products_with_categories_filter(self):
+        response = self.client.get(self.list_url, {'categories': self.category_1.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        products = response.data['results']
+        expected_products = [p for p in Product.objects.filter(categories=self.category_1)]
+        
+        self.assertEqual(len(products), len(expected_products))
+        self.assertEqual(response.data['count'], len(expected_products))
+
+    def test_api_get_products_with_is_active_filter(self):
+        response = self.client.get(self.list_url, {'is_active': True})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        products = response.data['results']
+        expected_products = [p for p in Product.objects.filter(is_active=True)]
+        
+        self.assertEqual(len(products), len(expected_products))
+        self.assertEqual(response.data['count'], len(expected_products))
+
+    def test_api_get_products_with_multiple_filters(self):
+        response = self.client.get(reverse('product-list'), {
+            'name': 'Product',
+            'retail_price_gte': 150,
+            'categories': self.category_1.id,
+            'is_active': True
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        products = response.data['results']
+        expected_products = [
+            p for p in Product.objects.filter(name__icontains='Product', retail_price__gte=150, is_active=True)
+            if self.category_1 in p.categories.all()
+        ]
+        
+        self.assertEqual(len(products), len(expected_products))
+        self.assertEqual(response.data['count'], len(expected_products))
+    
+    def test_api_get_products_with_invalid_retail_price_filter(self):
+        response = self.client.get(self.list_url, {'retail_price_gte': 'invalid'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_api_get_products_with_invalid_cost_price_filter(self):
+        response = self.client.get(self.list_url, {'cost_price_gte': 'not_a_number'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('detail', response.data)
+        
+
+
+
+    
+
         
 
     
