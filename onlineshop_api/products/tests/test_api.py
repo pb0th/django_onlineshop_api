@@ -1,12 +1,10 @@
 from shared.base_api_test import BaseAPITest
 from products.models import Product
-from PIL import Image
-import io
-from django.core.files.uploadedfile import SimpleUploadedFile
+
 from categories.models import Category
 from django.urls import reverse
 from rest_framework import status
-
+from shared.utils.generate_test_image import generate_test_image
 
 
 
@@ -16,18 +14,8 @@ class ProductAPITest(BaseAPITest):
         # Create Dummy Category for testing
         self.category_1 = Category.objects.create(name="Test Name 1", description="Test Description 1")
         self.category_2 = Category.objects.create(name="Test Name 2", description="Test Description 2")
-        # Create a valid in-memory image
-        image = Image.new('RGB', (100, 100), color='red')
-        image_io = io.BytesIO()
-        image.save(image_io, format='JPEG')
-        image_io.seek(0)
-
-        self.test_image_prefix = "unit_testing_image_"
-        self.test_image = SimpleUploadedFile(
-            name=f'{self.test_image_prefix}_test_image.jpg',
-            content=image_io.read(),
-            content_type='image/jpeg'
-        )
+        
+        self.test_image = generate_test_image()
         self.product_data = {
             'name': 'Test Product',
             'description': 'This is a test product.',
@@ -51,25 +39,10 @@ class ProductAPITest(BaseAPITest):
         self.detail_url = reverse('product-detail', args=[self.product.id])
     
     def test_create_product_with_valid_data(self):
-
-
-        # Create a valid in-memory image for this test
-        image = Image.new('RGB', (100, 100), color='red')
-        image_io = io.BytesIO()
-        image.save(image_io, format='JPEG')
-        image_io.seek(0)
-
-        test_image = SimpleUploadedFile(
-            name=f'{self.test_image_prefix}_test_image_2.jpg',
-            content=image_io.read(),
-            content_type='image/jpeg'
-        )
-
+        test_image = generate_test_image()
         data = self.product_data.copy()
         data['image'] = test_image
         data.pop("is_active")
-
-        
         current_product_count = Product.objects.count()
         response = self.client.post(self.list_url, data=data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
