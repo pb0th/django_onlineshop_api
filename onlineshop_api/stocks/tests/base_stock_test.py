@@ -1,26 +1,14 @@
 from django.test import TestCase
 from products.models import Product
 from categories.models import Category
-from PIL import Image
-import io
-from django.core.files.uploadedfile import SimpleUploadedFile
-import os
-from django.conf import settings
 from stocks.models import Stock
+from shared.utils.generate_test_image import generate_test_image
+from shared.utils.delete_test_images import delete_test_images
 class BaseStockTest(TestCase):
     def setUp(self):
         category_1 = Category.objects.create(name="Test Name 1", description="Test Description 1")
-        self.test_image_prefix = "unit_testing_image_"
-        image = Image.new('RGB', (100, 100), color='red')
-        image_io = io.BytesIO()
-        image.save(image_io, format='JPEG')
-        image_io.seek(0)
 
-        test_image = SimpleUploadedFile(
-            name=f'{self.test_image_prefix}_test_image.jpg',
-            content=image_io.read(),
-            content_type='image/jpeg'
-        )
+        test_image = generate_test_image()
         self.product = Product.objects.create(
             name="Test Product",
             description="Test Description",
@@ -49,17 +37,4 @@ class BaseStockTest(TestCase):
             'description': 'Restocking'
         }
     def tearDown(self):
-        uploads_dir = os.path.join(settings.MEDIA_ROOT, 'uploads/product')
-        # Check if the directory exists
-        if os.path.exists(uploads_dir):
-            # Iterate over all files in the directory
-            for filename in os.listdir(uploads_dir):
-                if filename.startswith(self.test_image_prefix):
-                    # Construct the full file path
-                    file_path = os.path.join(uploads_dir, filename)
-                    # Delete the file
-                    os.remove(file_path)
-
-            # Optionally remove the directory if it's empty after deletion
-            if not os.listdir(uploads_dir):
-                os.rmdir(uploads_dir)
+        delete_test_images('uploads/product')

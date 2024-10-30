@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("auth/", include('custom_auth.urls')),
     path('categories/', include('categories.urls')),
-    path('products/', include('products.urls'))
-
+    path('products/', include('products.urls')),
+    path('stocks/', include('stocks.urls'))
 ]
