@@ -21,9 +21,13 @@ class Stock(models.Model):
         verbose_name = "Stock"
         verbose_name_plural = "Stocks"
 
+    
+
 class StockMovement(models.Model):
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name="movements")
     quantity = models.PositiveIntegerField()
+    from_quantity = models.PositiveIntegerField()
+    to_quantity = models.PositiveIntegerField()
     MOVEMENT_CHOICES = (
         ('IN', 'Stock In'),   # Restocking
         ('OUT', 'Stock Out'), # Sale or usage
