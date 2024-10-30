@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 from django.utils.timezone import now
 from products.models import Product
 # Create your models here.
@@ -8,7 +8,7 @@ class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="stocks")
     name = models.CharField(max_length=100, null=False, blank=False)
     quantity = models.PositiveIntegerField()
-    stocking_date = models.DateField(default=now)  # Stocking date
+    stocking_date = models.DateTimeField(default=now)  # Stocking date
 
     created_at = models.DateTimeField(default=now, editable=False)
     updated_at = models.DateTimeField(auto_now=True)
@@ -20,6 +20,11 @@ class Stock(models.Model):
         ordering = ['-stocking_date']
         verbose_name = "Stock"
         verbose_name_plural = "Stocks"
+
+    def delete(self, *args, **kwargs):
+        if self.movements.exists():
+            raise IntegrityError("Cannot delete stock with existing stock movements.")
+        super().delete(*args, **kwargs)
 
     
 

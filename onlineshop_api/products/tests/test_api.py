@@ -1,8 +1,6 @@
 from shared.base_api_test import BaseAPITest
 from products.models import Product
-from PIL import Image
-import io
-from django.core.files.uploadedfile import SimpleUploadedFile
+
 from categories.models import Category
 from django.urls import reverse
 from rest_framework import status
